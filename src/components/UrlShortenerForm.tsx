@@ -13,6 +13,7 @@ const API_URL = VITE_API_URL
 
 export default function UrlShortenerForm() {
   const [longUrl, setLongUrl] = useState("");
+  const [customAlias, setCustomAlias] = useState("");
   const [shortUrl, setShortUrl] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
@@ -34,7 +35,11 @@ export default function UrlShortenerForm() {
           headers: {
             "Content-Type": "application/json",
           },
-          body: JSON.stringify({ longUrl, userId: "d12590e9-b3bc-4539-8ee0-80bd10029431" }),
+          body: JSON.stringify({ 
+            longUrl, 
+            userId: "d12590e9-b3bc-4539-8ee0-80bd10029431",
+            customAlias: customAlias || undefined // Only include if not empty
+          }),
           signal: controller.signal
         }
       );
@@ -85,6 +90,25 @@ export default function UrlShortenerForm() {
             className="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
             required
           />
+        </div>
+
+        <div className="mb-4">
+          <label htmlFor="customAlias" className="block text-sm font-medium mb-2">
+            Custom Alias (Optional)
+          </label>
+          <input
+            type="text"
+            id="customAlias"
+            value={customAlias}
+            onChange={(e) => setCustomAlias(e.target.value)}
+            placeholder="my-custom-url"
+            className="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+            pattern="^[a-zA-Z0-9-_]+$"
+            title="Only letters, numbers, hyphens, and underscores are allowed"
+          />
+          <p className="mt-1 text-sm text-gray-500">
+            Only letters, numbers, hyphens, and underscores are allowed
+          </p>
         </div>
 
         <button
